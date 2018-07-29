@@ -78,7 +78,7 @@ return [
     |
     */
 
-    'locale' => 'zh_CN',
+    'locale' => 'zh-CN',
     //faker生成中文
     'faker_locale' => 'zh_CN',
 

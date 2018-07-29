@@ -21,6 +21,12 @@ class User extends Authenticatable
         'password', 'remember_token',
     ];
 
+    //通用授权策略
+    public function isAuthOf($model)
+    {
+        return $this->id == $model->user_id;
+    }
+
     //用户拥有多个地址
     public function addresses()
     {

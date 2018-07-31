@@ -9,11 +9,11 @@
 | routes are loaded by the RouteServiceProvider within a group which
 | contains the "web" middleware group. Now create something great!
 |
-*/
+ */
 
 Route::redirect('/', '/products')->name('index');
 Route::get('products', 'ProductsController@index')->name('products.index');
-
+Route::get('products/{product}', 'ProductsController@show')->name('products.show');
 
 Auth::routes();
 
@@ -23,7 +23,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/email_verification/send', 'EmailVerificationController@send')->name('email_verification.send');
     //开始
     Route::group(['middleware' => 'email_verified'], function () {
-        Route::resource('user_addresses','UserAddressesController');
+        Route::resource('user_addresses', 'UserAddressesController');
     });
     //结束
 });

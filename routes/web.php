@@ -24,6 +24,8 @@ Route::group(['middleware' => 'auth'], function () {
     //开始
     Route::group(['middleware' => 'email_verified'], function () {
         Route::resource('user_addresses', 'UserAddressesController');
+        Route::post('products/{product}/favorite', 'ProductsController@favor')->name('products.favor');
+        Route::delete('products/{product}/favorite', 'ProductsController@disfavor')->name('products.disfavor');
     });
     //结束
 });

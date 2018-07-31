@@ -42,19 +42,48 @@ class ProductsController extends Controller
         $products = $builder->paginate(16);
         return view('products.index', [
             'products' => $products,
-            'filters'  => [
+            'filters' => [
                 'search' => $search,
-                'order'  => $order,
+                'order' => $order,
             ],
         ]);
     }
+
     //商品详情
-    public function show(Product $product)
+    public function show(Product $product,Request $request)
     {
         //判断商品是否已经上架，如果没有上架则抛出异常
         if (!$product->on_sale) {
             throw new InvalidRequestException('商品未上架');
         }
-        return view('products.show', compact('product'));
+        $favored = false;
+        //用户未登录时返回的是null,已经登录时返回的是对应的对象
+        if ($user = $request->user()) {
+            //从当前用户已经收藏的商品中搜索id为当前商品id的商品
+            //boolval()函数用于把值转为布尔值
+            $favored = boolval($user->favoriteProducts()->find($product->id));
+        }
+        return view('products.show', ['product' => $product, 'favored' => $favored]);
+    }
+
+    //收藏商品
+    public function favor(Product $product, Request $request)
+    {
+        $user = $request->user();
+        if ($user->favoriteProducts()->find($product->id)) {
+            return [];
+        }
+        //收藏 attach() 方法将当前用户和此商品关联起来
+        $user->favoriteProducts()->attach($product);
+        return [];
+    }
+
+    //取消收藏
+    public function disfavor(Product $product, Request $request)
+    {
+        $user = $request->user();
+        //detach() 方法用于取消多对多的关联，接受的参数个数与 attach() 方法一致。
+        $user->favoriteProducts()->detach($product);
+        return [];
     }
 }

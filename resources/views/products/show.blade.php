@@ -108,6 +108,35 @@
                             });
                     });
             });
+            //加入购物车按钮点击事件
+            $('.btn-add-to-cart').click(function () {
+                //请求加入购物车接口
+                axios.post('{{route('cart.add')}}', {
+                    sku_id: $('label.active input[name=skus]').val(),
+                    amount: $('.cart_amount input').val()
+                }).then(() => {
+                    swal('加入购物车成功', '', 'success');
+                }, (error) => {
+                    if (error.response.status == 401) {
+                        //http状态码为401代表用户未登录
+                        swal('请先登录', '', 'error');
+                    } else if (error.response.status == 422) {
+
+                        // http 状态码为 422 代表用户输入校验失败
+                        let html = '<div>';
+                        _.each(error.response.data.errors, function (errors) {
+                            _.each(errors, function (error) {
+                                html += error+'<br>';
+                            })
+                        });
+                        html += '</div>';
+                        swal({content: $(html)[0], icon: 'error'});
+                    } else {
+                        //其他情况应该是系统挂了
+                        swal('系统错误', '', 'error');
+                    }
+                });
+            })
         });
     </script>
 @stop

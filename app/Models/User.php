@@ -32,6 +32,13 @@ class User extends Authenticatable
     {
         return $this->hasMany(UserAddress::class);
     }
+
+    //用户拥有多个购物车
+    public function cartItems()
+    {
+        return $this->hasMany(CartItem::class);
+    }
+
     //用户收藏多个商品
     public function favoriteProducts()
     {

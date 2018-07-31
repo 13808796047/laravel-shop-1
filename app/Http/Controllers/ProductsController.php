@@ -50,7 +50,7 @@ class ProductsController extends Controller
     }
 
     //商品详情
-    public function show(Product $product,Request $request)
+    public function show(Product $product, Request $request)
     {
         //判断商品是否已经上架，如果没有上架则抛出异常
         if (!$product->on_sale) {
@@ -85,5 +85,13 @@ class ProductsController extends Controller
         //detach() 方法用于取消多对多的关联，接受的参数个数与 attach() 方法一致。
         $user->favoriteProducts()->detach($product);
         return [];
+    }
+
+    //收藏商品列表
+    public function favorites(Request $request)
+    {
+        $products = $request->user()->favoriteProducts()->paginate(16);
+
+        return view('products.favorites', ['products' => $products]);
     }
 }

@@ -13,7 +13,7 @@
 
 Route::redirect('/', '/products')->name('index');
 Route::get('products', 'ProductsController@index')->name('products.index');
-Route::get('products/{product}', 'ProductsController@show')->name('products.show');
+
 
 Auth::routes();
 
@@ -24,8 +24,11 @@ Route::group(['middleware' => 'auth'], function () {
     //开始
     Route::group(['middleware' => 'email_verified'], function () {
         Route::resource('user_addresses', 'UserAddressesController');
+        Route::get('products/favorites','ProductsController@favorites')->name('products.favorites');
         Route::post('products/{product}/favorite', 'ProductsController@favor')->name('products.favor');
         Route::delete('products/{product}/favorite', 'ProductsController@disfavor')->name('products.disfavor');
+
     });
     //结束
 });
+Route::get('products/{product}', 'ProductsController@show')->name('products.show');

@@ -115,7 +115,10 @@
                     sku_id: $('label.active input[name=skus]').val(),
                     amount: $('.cart_amount input').val()
                 }).then(() => {
-                    swal('加入购物车成功', '', 'success');
+                    swal('加入购物车成功', '', 'success')
+                        .then(()=>{
+                            location.href='{{route('cart.index')}}'
+                        });
                 }, (error) => {
                     if (error.response.status == 401) {
                         //http状态码为401代表用户未登录
